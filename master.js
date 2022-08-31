@@ -7,8 +7,10 @@ export default class Master {
   #snakeHeadImage;
   #snakeBodyImage;
   #direction;
+  #ctx;
+  #interval
 
-  constructor(box, groundImage, foodImage, snakeHeadImage, snakeBodyImage) {
+  constructor(box, groundImage, foodImage, snakeHeadImage, snakeBodyImage, ctx) {
     this.#box = box;
     this.#groundImage = new Image();
     this.#groundImage.src = groundImage;
@@ -26,25 +28,33 @@ export default class Master {
       y: Math.floor(Math.random() * 15 + 3) * this.#box,
     };
     this.#score = 0;
+    this.#ctx = ctx;
+    this.render = this.render.bind(this);
+    this.#ctx.font = "30px Arial";
+    this.#ctx.fillStyle = "#ECF4FF";
   }
 
-  render(ctx) {
-    ctx.drawImage(this.#groundImage, 0, 0);
-    // ctx.drawImage(this.#snakeHeadImage, 9 * this.#box, 10 * this.#box);
-
-    ctx.fillText(`Score: ${this.#score}`, this.#box * 2.5, this.#box * 1.6);
-    ctx.font = "30px Arial";
-    ctx.fillStyle = "#ECF4FF";
-    ctx.drawImage(this.#snakeHeadImage, this.snake[0].x, this.snake[0].y);
-    ctx.drawImage(this.#foodImage, this.#food.x, this.#food.y);
+  render() {
     this.#alwayStep();
+    this.#border()
+    this.#renderImage.call(this)
     this.#eat();
-
-    ctx.fill();
   }
 
-  #restart() {}
-  #gameOver() {}
+  #renderImage() {
+    this.#ctx.save();
+    this.#ctx.drawImage(this.#groundImage, 0, 0);
+    this.snake.map((_, index) => {
+      if (index === 0) {
+        this.#ctx.drawImage(this.#snakeHeadImage, this.snake[0].x, this.snake[0].y)
+      } else {
+        this.#ctx.drawImage(this.#snakeBodyImage, this.snake[index].x, this.snake[index].y)
+      }
+    })
+    this.#ctx.drawImage(this.#foodImage, this.#food.x, this.#food.y);
+    this.#ctx.fillText(`Score: ${this.#score}`, this.#box * 2.5, this.#box * 1.6);
+    this.#ctx.restore();
+  }
   #alwayStep() {
     if (this.#direction === "ArrowDown") {
       this.snake[0].y += this.#box;
@@ -56,17 +66,31 @@ export default class Master {
       this.snake[0].x += this.#box;
     }
   }
+  #border(){
+    this.snake.map((element, index) => {
+      if(index !== 0){
+        if(this.snake[0].x === element.x && this.snake[0].y === element.y){
+          this.#dead()
+        }
+      }
+    })
+    if (this.snake[0].x > 17 * this.#box || this.snake[0].x < this.#box ||
+      this.snake[0].y > 17 * this.#box || this.snake[0].y < 3 * this.#box){
+        this.#dead()
+      }
+  }
   step({ code }) {
     if (
-      code == "ArrowDown" ||
-      code == "ArrowUp" ||
-      code == "ArrowLeft" ||
-      code == "ArrowRight"
+      (code == "ArrowDown" && this.#direction !== "ArrowUp") ||
+      (code == "ArrowUp"  && this.#direction !== "ArrowDown") ||
+      (code == "ArrowLeft" && this.#direction !== "ArrowRight")||
+      (code == "ArrowRight" && this.#direction !== "ArrowLeft")
     ) {
       this.#direction = code;
     }
   }
   #eat() {
+    this.snake.unshift(Object.assign({}, this.snake[0]))
     if (this.snake[0].x == this.#food.x && this.snake[0].y == this.#food.y) {
       this.#score++;
       this.#food = {
@@ -74,25 +98,14 @@ export default class Master {
         y: Math.floor(Math.random() * 15 + 3) * this.#box,
       };
     } else {
-      // snakeSpawn.pop();
+      this.snake.pop()
     }
   }
-  #dead() {}
-  #addSizeSnake() {}
+  #dead() {
+    alert(`Game Over, you score was ${this.#score} click Ok to restart!`)
+    clearInterval(this.#interval)
+  }
+  gameOver(interval){
+    this.#interval = interval;
+  }
 }
-
-let x = {
-  game: true,
-  snake: [{}],
-  score: 0,
-  food: {},
-};
-
-// snakeSpawn[0] = {
-//   x: 9 * BOX,
-//   y: 10 * BOX,
-// };
-
-// function drawGame() {
-//   ctx.drawImage(ground, 0, 0);
-// }
