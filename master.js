@@ -8,9 +8,16 @@ export default class Master {
   #snakeBodyImage;
   #direction;
   #ctx;
-  #interval
+  #interval;
 
-  constructor(box, groundImage, foodImage, snakeHeadImage, snakeBodyImage, ctx) {
+  constructor(
+    box,
+    groundImage,
+    foodImage,
+    snakeHeadImage,
+    snakeBodyImage,
+    ctx
+  ) {
     this.#box = box;
     this.#groundImage = new Image();
     this.#groundImage.src = groundImage;
@@ -36,8 +43,8 @@ export default class Master {
 
   render() {
     this.#alwayStep();
-    this.#border()
-    this.#renderImage.call(this)
+    this.#border();
+    this.#renderImage.call(this);
     this.#eat();
   }
 
@@ -46,13 +53,25 @@ export default class Master {
     this.#ctx.drawImage(this.#groundImage, 0, 0);
     this.snake.map((_, index) => {
       if (index === 0) {
-        this.#ctx.drawImage(this.#snakeHeadImage, this.snake[0].x, this.snake[0].y)
+        this.#ctx.drawImage(
+          this.#snakeHeadImage,
+          this.snake[0].x,
+          this.snake[0].y
+        );
       } else {
-        this.#ctx.drawImage(this.#snakeBodyImage, this.snake[index].x, this.snake[index].y)
+        this.#ctx.drawImage(
+          this.#snakeBodyImage,
+          this.snake[index].x,
+          this.snake[index].y
+        );
       }
-    })
+    });
     this.#ctx.drawImage(this.#foodImage, this.#food.x, this.#food.y);
-    this.#ctx.fillText(`Score: ${this.#score}`, this.#box * 2.5, this.#box * 1.6);
+    this.#ctx.fillText(
+      `Score: ${this.#score}`,
+      this.#box * 2.5,
+      this.#box * 1.6
+    );
     this.#ctx.restore();
   }
   #alwayStep() {
@@ -66,31 +85,35 @@ export default class Master {
       this.snake[0].x += this.#box;
     }
   }
-  #border(){
+  #border() {
     this.snake.map((element, index) => {
-      if(index !== 0){
-        if(this.snake[0].x === element.x && this.snake[0].y === element.y){
-          this.#dead()
+      if (index !== 0) {
+        if (this.snake[0].x === element.x && this.snake[0].y === element.y) {
+          this.#dead();
         }
       }
-    })
-    if (this.snake[0].x > 17 * this.#box || this.snake[0].x < this.#box ||
-      this.snake[0].y > 17 * this.#box || this.snake[0].y < 3 * this.#box){
-        this.#dead()
-      }
+    });
+    if (
+      this.snake[0].x > 17 * this.#box ||
+      this.snake[0].x < this.#box ||
+      this.snake[0].y > 17 * this.#box ||
+      this.snake[0].y < 3 * this.#box
+    ) {
+      this.#dead();
+    }
   }
   step({ code }) {
     if (
       (code == "ArrowDown" && this.#direction !== "ArrowUp") ||
-      (code == "ArrowUp"  && this.#direction !== "ArrowDown") ||
-      (code == "ArrowLeft" && this.#direction !== "ArrowRight")||
+      (code == "ArrowUp" && this.#direction !== "ArrowDown") ||
+      (code == "ArrowLeft" && this.#direction !== "ArrowRight") ||
       (code == "ArrowRight" && this.#direction !== "ArrowLeft")
     ) {
       this.#direction = code;
     }
   }
   #eat() {
-    this.snake.unshift(Object.assign({}, this.snake[0]))
+    this.snake.unshift(Object.assign({}, this.snake[0]));
     if (this.snake[0].x == this.#food.x && this.snake[0].y == this.#food.y) {
       this.#score++;
       this.#food = {
@@ -98,14 +121,15 @@ export default class Master {
         y: Math.floor(Math.random() * 15 + 3) * this.#box,
       };
     } else {
-      this.snake.pop()
+      this.snake.pop();
     }
   }
   #dead() {
-    alert(`Game Over, you score was ${this.#score} click Ok to restart!`)
-    clearInterval(this.#interval)
+    alert(`Game Over, you score was ${this.#score} click Ok to restart!`);
+    clearInterval(this.#interval);
+    document.getElementById("start").disabled = false;
   }
-  gameOver(interval){
+  gameOver(interval) {
     this.#interval = interval;
   }
 }

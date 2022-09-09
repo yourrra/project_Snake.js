@@ -1,4 +1,50 @@
+body {
+  background: rgb(205, 205, 205);
+}
+
 canvas {
   display: block;
   margin: 0 auto;
+}
+
+.buttonContainer {
+  width: 608px;
+  margin: 0 auto;
+  background: rgb(38, 38, 38);
+  padding-bottom: 10px;
+}
+
+.buttonStyle {
+  width: 408px;
+  margin: 0 auto;
+}
+
+.buttonStart {
+  margin: 0 auto;
+  width: 408px;
+}
+
+button {
+  width: 408px;
+  margin-top: 10px;
+}
+
+input {
+  margin-top: 25px;
+  width: 408px;
+}
+
+.lvlSize {
+  margin: 0 auto;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+}
+
+.levelText {
+  margin: 0 auto;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  margin-top: 10px;
 }

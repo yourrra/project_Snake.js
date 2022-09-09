@@ -1,5 +1,6 @@
 import Master from "./master.js";
 function GAME() {
+  document.getElementById("start").disabled = true;
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
   const game = new Master(
@@ -15,6 +16,9 @@ function GAME() {
 
   const interval = setInterval(game.render, 100);
 
-  game.gameOver(interval)
+  game.gameOver(interval);
 }
-document.querySelector('.startGame').addEventListener('click', GAME)
+GAME = GAME.bind(this);
+document.getElementById("start").addEventListener("click", () => {
+  GAME();
+});
