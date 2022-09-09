@@ -8,17 +8,25 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <button class="startGame">Start</button>
-    <button class="restartGame">Restart</button>
-    <div class="lvlSize"></div>
-    <input
-      class="lvl"
-      value="1000"
-      min="100"
-      max="2000"
-      step="100"
-      type="range"
-    />
+    <div class="buttonContainer">
+      <div class="buttonStyle">
+        <div class="buttonStart">
+          <button id="start" class="startGame">Start/Restart</button>
+        </div>
+        <div class="levelText">Level Game</div>
+        <div>
+          <input
+            class="lvl"
+            value="1000"
+            min="100"
+            max="2000"
+            step="100"
+            type="range"
+          />
+        </div>
+        <div class="lvlSize"></div>
+      </div>
+    </div>
     <canvas id="game" width="608px" height="608px"></canvas>
     <script type="module" src="game.js"></script>
     <script>
