@@ -9,8 +9,11 @@ export default class Master {
   #direction;
   #ctx;
   #interval;
-
+  #_direction;
+  #need_step
+  #fps
   constructor(
+    fps,
     box,
     groundImage,
     foodImage,
@@ -28,7 +31,10 @@ export default class Master {
     this.#snakeBodyImage = new Image();
     this.#snakeBodyImage.src = snakeBodyImage;
     this.#direction = "";
+    this.#_direction = "";
     this.snake = [{ x: 9 * this.#box, y: 10 * this.#box }];
+    this.#fps = fps
+    this.#need_step = this.#fps - 1;
     this.step = this.step.bind(this);
     this.#food = {
       x: Math.floor(Math.random() * 17 + 1) * this.#box,
@@ -44,8 +50,8 @@ export default class Master {
   render() {
     this.#alwayStep();
     this.#border();
-    this.#renderImage.call(this);
     this.#eat();
+    this.#renderImage.call(this);
   }
 
   #renderImage() {
@@ -76,13 +82,18 @@ export default class Master {
   }
   #alwayStep() {
     if (this.#direction === "ArrowDown") {
-      this.snake[0].y += this.#box;
+      this.snake[0].y += this.#box / this.#fps;
     } else if (this.#direction === "ArrowUp") {
-      this.snake[0].y -= this.#box;
+      this.snake[0].y -= this.#box / this.#fps;
     } else if (this.#direction === "ArrowLeft") {
-      this.snake[0].x -= this.#box;
+      this.snake[0].x -= this.#box / this.#fps;
     } else if (this.#direction === "ArrowRight") {
-      this.snake[0].x += this.#box;
+      this.snake[0].x += this.#box / this.#fps;
+    }
+    this.#need_step += 1
+    if (this.#need_step === this.#fps) {
+      this.#direction = this.#_direction;
+      this.#need_step = 0
     }
   }
   #border() {
@@ -109,23 +120,23 @@ export default class Master {
       (code == "ArrowLeft" && this.#direction !== "ArrowRight") ||
       (code == "ArrowRight" && this.#direction !== "ArrowLeft")
     ) {
-      this.#direction = code;
+      this.#_direction = code;
     }
   }
   #eat() {
-    this.snake.unshift(Object.assign({}, this.snake[0]));
+    if (this.#need_step === 0 || this.#need_step === this.#fps) {this.snake.unshift(Object.assign({}, this.snake[0]));}
     if (this.snake[0].x == this.#food.x && this.snake[0].y == this.#food.y) {
       this.#score++;
       this.#food = {
         x: Math.floor(Math.random() * 17 + 1) * this.#box,
         y: Math.floor(Math.random() * 15 + 3) * this.#box,
       };
-    } else {
+    } else if(this.#need_step === 0 || this.#need_step === this.#fps) {
       this.snake.pop();
     }
   }
   #dead() {
-    alert(`Game Over, you score was ${this.#score} click Ok to restart!`);
+    alert(`Game Over, you score was ${this.#score}!`);
     clearInterval(this.#interval);
     document.getElementById("start").disabled = false;
   }

@@ -17,28 +17,26 @@
         <div>
           <input
             class="lvl"
-            value="1000"
-            min="100"
-            max="2000"
-            step="100"
+            value="50"
+            min="10"
+            max="250"
+            step="10"
             type="range"
           />
         </div>
         <div class="lvlSize"></div>
+        <input type="range" class="fps" max="5" min="1" step="1" value="5"/>
+        <p class="fps-size"></p>
       </div>
     </div>
     <canvas id="game" width="608px" height="608px"></canvas>
     <script type="module" src="game.js"></script>
     <script>
-      document.querySelector(".lvlSize").innerHTML =
-        "<p>" + document.querySelector(".lvl").nodeValue;
-      +"</p>";
-      document.querySelector(".lvl");
-      document.addEventListener("change", (res) => {
-        document.querySelector(".lvlSize").innerHTML =
-          "<p>" + document.querySelector(".lvl").nodeValue;
-        +"</p>";
-      });
+      document.querySelector(".lvlSize").innerText = "Level: " + 50
+      document.querySelector(".fps-size").innerText = "Качество: " + 5
+      document.querySelector(".fps").addEventListener("change", ()=>{
+        document.querySelector(".fps-size").innerText = "Качество: " +  document.querySelector(".fps").value
+      })
     </script>
   </body>
 </html>
