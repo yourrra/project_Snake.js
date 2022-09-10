@@ -41,6 +41,13 @@ input {
   text-align: center;
 }
 
+.fps-size {
+  margin: 0 auto;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+}
+
 .levelText {
   margin: 0 auto;
   color: white;
